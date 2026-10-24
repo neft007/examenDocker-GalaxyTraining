@@ -1,0 +1,36 @@
+# ============================================================
+# .dockerignore - Excluir del contexto de build
+# ============================================================
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+
+# Secretos (NUNCA deben entrar al contenedor)
+db_password.txt
+.env
+*.secret
+
+# Archivos de documentación que no afectan al build
+docs/
+postman/
+README.md
+*.md
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Python (por si acaso)
+.venv/
+__pycache__/
