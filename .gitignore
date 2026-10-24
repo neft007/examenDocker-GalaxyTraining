@@ -1,0 +1,117 @@
+# ============================================================
+# .gitignore para Examen Docker - Gimnasio Reservas
+# ============================================================
+
+# ------------------------------------------------------------
+# Maven / Build
+# ------------------------------------------------------------
+target/
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ------------------------------------------------------------
+# Spring Boot / Spring Tool Suite (STS)
+# ------------------------------------------------------------
+HELP.md
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# ------------------------------------------------------------
+# IntelliJ IDEA
+# ------------------------------------------------------------
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# ------------------------------------------------------------
+# NetBeans
+# ------------------------------------------------------------
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+nb-configuration.xml
+
+# ------------------------------------------------------------
+# VS Code
+# ------------------------------------------------------------
+.vscode/
+
+# ------------------------------------------------------------
+# Docker / Secretos (CRÍTICO para el examen)
+# ------------------------------------------------------------
+# Archivo de contraseña usado por docker-compose (secrets)
+db_password.txt
+*.secret
+*.secret.txt
+.env
+.env.*
+!.env.example
+
+# Archivos de volúmenes locales (si se montan como bind mount)
+postgres_data/
+gym_data/
+redis_data/
+
+# Archivos temporales de Docker
+docker-compose.override.yml
+
+# ------------------------------------------------------------
+# Python (por si vuelven a usar herramientas de spec)
+# ------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ------------------------------------------------------------
+# Sistema operativo
+# ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+desktop.ini
+
+# ------------------------------------------------------------
+# Archivos de auditoría temporales
+# ------------------------------------------------------------
+auditar_proyecto.sh
+reporte_auditoria_docker.txt
+
+# ------------------------------------------------------------
+# Logs y archivos temporales
+# ------------------------------------------------------------
+*.log
+logs/
+*.tmp
+*.bak
+
+# ------------------------------------------------------------
+# SVN (si alguna vez se usa)
+# ------------------------------------------------------------
+.svn/
+
+# ------------------------------------------------------------
+# Node (por si se agrega algún frontend o herramientas)
+# ------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
