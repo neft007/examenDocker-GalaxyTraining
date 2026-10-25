@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # ============================================================
   # 1. API Gym-Reservas (Punto 8: Build en caliente)
@@ -11,12 +9,11 @@ services:
     image: neft007/gym-reservas-api:latest
     container_name: gym-api
     ports:
-      - "8080:8080"    # Puerto principal
-      - "9090:9090"    # Punto 7: segundo puerto expuesto
+      - "8080:8080"
+      - "9090:9090"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://gym-db:5432/gimnasiodb
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD_FILE=/run/secrets/db_password
     secrets:
       - db_password
     networks:
@@ -28,14 +25,14 @@ services:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 60s   # ✅ Aumentar a 60s para dar tiempo a Spring Boot
 
   # ============================================================
-  # 2. PostgreSQL (Punto 4 y 9: red interna, sin puerto al host, con volumen)
+  # 2. PostgreSQL
   # ============================================================
   gym-db:
-    image: postgres:18-alpine
+    image: postgres:16-alpine
     container_name: gym-db
     environment:
       - POSTGRES_DB=gimnasiodb
@@ -44,34 +41,34 @@ services:
     secrets:
       - db_password
     volumes:
-      - gym_data:/var/lib/postgresql/data   # Persistencia (Punto 9)
+      - gym_data:/var/lib/postgresql/data
     networks:
       - gym-network
-    # ⚠️ NO exponemos puertos al host (Seguridad)
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d gimnasiodb"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s   # ✅ Añadir start_period para evitar falsos negativos
 
   # ============================================================
-  # 3. Adminer (GUI para ver la BD)
+  # 3. Adminer
   # ============================================================
   gym-adminer:
     image: adminer:latest
     container_name: gym-adminer
     ports:
-      - "8081:8080"    # Adminer en http://localhost:8081
+      - "8081:8080"
     networks:
       - gym-network
     depends_on:
       - gym-db
 
   # ============================================================
-  # 4. Redis (Imagen extra para cumplir las 4 imágenes distintas)
+  # 4. Redis
   # ============================================================
   gym-redis:
-    image: redis:8-alpine
+    image: redis:7-alpine
     container_name: gym-redis
     networks:
       - gym-network
@@ -79,7 +76,7 @@ services:
       - redis_data:/data
 
   # ============================================================
-  # 5. Worker (segunda instancia de la API como worker)
+  # 5. Worker
   # ============================================================
   gym-worker:
     build:
@@ -91,7 +88,6 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://gym-db:5432/gimnasiodb
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD_FILE=/run/secrets/db_password
     secrets:
       - db_password
     depends_on:
@@ -100,23 +96,14 @@ services:
     networks:
       - gym-network
 
-# ============================================================
-# Redes
-# ============================================================
 networks:
   gym-network:
     driver: bridge
 
-# ============================================================
-# Volúmenes (Punto 9: persistencia)
-# ============================================================
 volumes:
   gym_data:
   redis_data:
 
-# ============================================================
-# Secretos (Punto 9)
-# ============================================================
 secrets:
   db_password:
     file: ./db_password.txt
